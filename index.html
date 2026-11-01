@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Gerador de Constelações</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alegreya+Sans:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Mono:wght@400;500&family=IM+Fell+English+SC&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="app">
+    <main class="ceu">
+      <canvas id="tela" aria-label="Céu estrelado onde as constelações são formadas"></canvas>
+
+      <header class="cabecalho">
+        <h1>Gerador de Constelações</h1>
+        <p class="ficha" id="ficha">Preparando o céu</p>
+      </header>
+
+      <div class="controles">
+        <button type="button" id="botao-rodada" class="primario">Próxima rodada</button>
+        <button type="button" id="botao-novo">Novo céu</button>
+      </div>
+    </main>
+
+    <aside class="painel">
+      <section id="vista-intro" class="vista">
+        <p class="rotulo">Como funciona</p>
+        <h2>Ligando estrelas por proximidade</h2>
+        <p>Cada rodada procura os dois pontos mais próximos do céu usando dividir e conquistar. As duas estrelas encontradas são ligadas por uma linha e o par vira um único ponto, o centróide do grupo.</p>
+        <p>Rodada após rodada, os grupos crescem até todas as estrelas ficarem ligadas em uma única constelação. A primeira rodada é explicada passo a passo.</p>
+      </section>
+
+      <section class="ajustes" aria-label="Ajustes do céu">
+        <div class="ajuste">
+          <label for="ajuste-estrelas"><span>Estrelas</span><output id="valor-estrelas">80</output></label>
+          <input type="range" id="ajuste-estrelas" min="20" max="200" step="10" value="80">
+        </div>
+      </section>
+    </aside>
+  </div>
+</body>
+</html>
