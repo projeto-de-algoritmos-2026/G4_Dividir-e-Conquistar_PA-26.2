@@ -7,6 +7,10 @@
   --linha: #1a2035;
   --ouro: #e2cd9c;
   --ouro-forte: #f3e3bb;
+  --esquerda: #7fa8ff;
+  --direita: #ffad78;
+  --faixa: #6fe0cf;
+  --comparacao: #dce2f5;
   --fonte-titulo: "IM Fell English SC", "Iowan Old Style", Georgia, serif;
   --fonte-texto: "Alegreya Sans", "Gill Sans", "Segoe UI", sans-serif;
   --fonte-dados: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
@@ -185,6 +189,161 @@ button.primario:disabled {
 
 .painel .rotulo {
   margin-bottom: 6px;
+}
+
+.passo-topo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.passo-topo .rotulo {
+  margin: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.niveis {
+  display: flex;
+  gap: 5px;
+}
+
+.niveis span {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  border: 1px solid rgba(226, 205, 156, 0.4);
+}
+
+.niveis span.ativo {
+  background: var(--ouro);
+  border-color: var(--ouro);
+}
+
+.barra {
+  height: 2px;
+  margin: 10px 0 20px;
+  background: var(--linha);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.barra i {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--ouro);
+  transition: width 0.3s ease-out;
+}
+
+.passo-texto {
+  min-height: 11.5em;
+  font-size: 15.5px;
+}
+
+.passo-texto strong {
+  white-space: nowrap;
+  font-weight: 500;
+  color: var(--ouro-forte);
+}
+
+.passo-texto .esq {
+  color: var(--esquerda);
+}
+
+.passo-texto .dir {
+  color: var(--direita);
+}
+
+.passo-texto .fx {
+  color: var(--faixa);
+}
+
+.contagem {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 8px 0 18px;
+  padding: 14px 0;
+  border-block: 1px solid var(--linha);
+}
+
+.contagem b {
+  display: block;
+  font-family: var(--fonte-dados);
+  font-size: 26px;
+  font-weight: 400;
+  line-height: 1.1;
+  color: var(--ouro-forte);
+  font-variant-numeric: tabular-nums;
+}
+
+.contagem div:last-child b {
+  color: var(--tinta-suave);
+}
+
+.passo-botoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.passo-botoes button {
+  font-size: 14px;
+  padding: 8px 14px;
+}
+
+.legenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  margin: 20px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13px;
+  color: var(--tinta-suave);
+}
+
+.legenda li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.legenda i {
+  width: 16px;
+  height: 0;
+  border-top: 2px solid;
+}
+
+.legenda .esq {
+  border-color: var(--esquerda);
+}
+
+.legenda .dir {
+  border-color: var(--direita);
+}
+
+.legenda .fx {
+  height: 10px;
+  border: 1px dashed var(--faixa);
+  background: rgba(111, 224, 207, 0.12);
+}
+
+.legenda .cmp {
+  border-top-width: 1px;
+  border-color: var(--comparacao);
+}
+
+.legenda .melhor {
+  border-top-width: 3px;
+  border-color: var(--ouro-forte);
+}
+
+.dica {
+  margin-top: 18px;
+  font-size: 13px;
+  color: var(--tinta-suave);
 }
 
 .resumo {

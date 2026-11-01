@@ -9,12 +9,31 @@ const el = {
   valorEstrelas: document.getElementById('valor-estrelas'),
   vistas: {
     intro: document.getElementById('vista-intro'),
+    explicacao: document.getElementById('vista-explicacao'),
     diario: document.getElementById('vista-diario'),
   },
   resumo: document.getElementById('diario-resumo'),
   aviso: document.getElementById('diario-aviso'),
   diario: document.getElementById('diario'),
 };
+
+const explicador = criarExplicador(
+  ceu,
+  {
+    titulo: document.getElementById('explicacao-titulo'),
+    texto: document.getElementById('explicacao-texto'),
+    contador: document.getElementById('explicacao-contador'),
+    barra: document.getElementById('explicacao-barra'),
+    niveis: document.getElementById('explicacao-niveis'),
+    calculadas: document.getElementById('explicacao-calculadas'),
+    forcaBruta: document.getElementById('explicacao-forca'),
+    anterior: document.getElementById('explicacao-anterior'),
+    proximo: document.getElementById('explicacao-proximo'),
+    reproduzir: document.getElementById('explicacao-reproduzir'),
+    pular: document.getElementById('explicacao-pular'),
+  },
+  (par, comparacoes) => aplicarRodada(par, comparacoes),
+);
 
 const estado = {
   semente: 0,
@@ -44,6 +63,7 @@ function novaSemente() {
 
 // gera um céu a partir da semente e volta para a rodada zero
 function novoCeu(semente = novaSemente()) {
+  explicador.cancelar();
   estado.semente = semente;
   estado.campo = gerarCeu(semente, estado.quantidade, ceu.proporcaoUtil());
   ceu.definirCampo(estado.campo);
@@ -58,9 +78,15 @@ function novoCeu(semente = novaSemente()) {
   atualizarBotoes();
 }
 
-// executa uma rodada e informa se ela conseguiu ligar um par
+// executa uma rodada e informa se ela conseguiu ligar um par, explicando a primeira
 function proximaRodada() {
-  if (estado.grupos.length < 2) return false;
+  if (estado.grupos.length < 2 || explicador.ativo()) return false;
+  if (estado.rodada === 0) {
+    explicador.iniciar(estado.grupos);
+    mostrarVista('explicacao');
+    atualizarBotoes();
+    return false;
+  }
   let comparacoes = 0;
   const par = parMaisProximo(estado.grupos, (evento) => {
     if (evento.comparacoes) comparacoes += evento.comparacoes.length;
@@ -102,7 +128,9 @@ function atualizarFicha() {
 
 // liga e desliga os botões de acordo com o momento do jogo
 function atualizarBotoes() {
-  el.botaoRodada.disabled = estado.grupos.length < 2;
+  const explicando = explicador.ativo();
+  el.botaoRodada.disabled = explicando || estado.grupos.length < 2;
+  el.botaoRodada.textContent = explicando ? 'Explicando a 1ª rodada' : 'Próxima rodada';
 }
 
 // mostra apenas a vista escolhida do painel lateral
@@ -191,6 +219,7 @@ function quadro(agora) {
   ceu.desenharEstrelas(agora);
   ceu.desenharLetras(estado.grupos);
   desenharEfeitos(agora);
+  explicador.desenhar(agora);
   requestAnimationFrame(quadro);
 }
 

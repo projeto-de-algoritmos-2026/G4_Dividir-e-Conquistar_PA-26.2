@@ -33,6 +33,43 @@
         <p>Rodada após rodada, os grupos crescem até todas as estrelas ficarem ligadas em uma única constelação. A primeira rodada é explicada passo a passo.</p>
       </section>
 
+      <section id="vista-explicacao" class="vista" hidden>
+        <div class="passo-topo">
+          <p class="rotulo" id="explicacao-contador">Passo 1</p>
+          <div class="niveis" id="explicacao-niveis" title="Profundidade da recursão" aria-hidden="true"></div>
+        </div>
+        <div class="barra" aria-hidden="true"><i id="explicacao-barra"></i></div>
+        <h2 id="explicacao-titulo"></h2>
+        <div class="passo-texto" id="explicacao-texto"></div>
+
+        <div class="contagem">
+          <div>
+            <span class="rotulo">Calculadas</span>
+            <b id="explicacao-calculadas">0</b>
+          </div>
+          <div>
+            <span class="rotulo">Força bruta</span>
+            <b id="explicacao-forca">0</b>
+          </div>
+        </div>
+
+        <div class="passo-botoes">
+          <button type="button" id="explicacao-anterior">Anterior</button>
+          <button type="button" id="explicacao-proximo" class="primario">Próximo passo</button>
+          <button type="button" id="explicacao-reproduzir" aria-pressed="false">Reproduzir</button>
+          <button type="button" id="explicacao-pular">Ir ao resultado</button>
+        </div>
+
+        <ul class="legenda">
+          <li><i class="esq"></i>metade esquerda</li>
+          <li><i class="dir"></i>metade direita</li>
+          <li><i class="fx"></i>faixa de largura 2δ</li>
+          <li><i class="cmp"></i>distância calculada</li>
+          <li><i class="melhor"></i>melhor par</li>
+        </ul>
+        <p class="dica">As setas ← e → do teclado também navegam pelos passos.</p>
+      </section>
+
       <section id="vista-diario" class="vista" hidden>
         <p class="rotulo">Diário das rodadas</p>
         <h2>Cada par ligado</h2>
@@ -52,6 +89,7 @@
 
   <script src="js/algorithms.js"></script>
   <script src="js/sky.js"></script>
+  <script src="js/explainer.js"></script>
   <script src="js/main.js"></script>
 </body>
 </html>
