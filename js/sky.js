@@ -18,9 +18,11 @@ const CORES_DE_NEBULOSA = [
   [120, 96, 70],
 ];
 
+const ALFABETO_GREGO = 'αβγδεζηθικλμνξοπρστυφχψω';
+
 const movimentoReduzido = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-// gera números aleatórios reproduzíveis a partir de uma semente
+// gera números pseudoaleatórios reproduzíveis a partir de uma semente
 function criarAleatorio(semente) {
   let estado = semente >>> 0;
   return () => {
@@ -52,6 +54,11 @@ function sortearClasse(aleatorio) {
 // prende um valor entre um mínimo e um máximo
 function limitar(valor, minimo, maximo) {
   return Math.min(Math.max(valor, minimo), maximo);
+}
+
+// suaviza o avanço de uma animação que vai de 0 a 1
+function suavizar(t) {
+  return 1 - Math.pow(1 - t, 3);
 }
 
 // gera as estrelas em graus e a decoração do fundo em coordenadas relativas à tela
@@ -368,6 +375,69 @@ function criarCeu(canvas) {
     ctx.restore();
   }
 
+  // desenha as linhas das constelações deixando um respiro em volta de cada estrela
+  function desenharLinhas(linhas, agora) {
+    ctx.save();
+    ctx.lineCap = 'round';
+    for (const linha of linhas) {
+      const decorrido = agora - linha.nascimento;
+      if (decorrido <= 0 && !movimentoReduzido) continue;
+      const avanco = movimentoReduzido ? 1 : suavizar(limitar(decorrido / 900, 0, 1));
+      const recente = movimentoReduzido ? 0 : limitar(1 - (decorrido - 900) / 1600, 0, 1);
+
+      const a = paraTela(linha.a);
+      const b = paraTela(linha.b);
+      const comprimento = Math.hypot(b.x - a.x, b.y - a.y);
+      const folgaA = raioDe(linha.a) + 5 * dpr;
+      const folgaB = raioDe(linha.b) + 5 * dpr;
+      if (comprimento <= folgaA + folgaB) continue;
+
+      const ux = (b.x - a.x) / comprimento;
+      const uy = (b.y - a.y) / comprimento;
+      const inicioX = a.x + ux * folgaA;
+      const inicioY = a.y + uy * folgaA;
+      const trecho = (comprimento - folgaA - folgaB) * avanco;
+      const fimX = inicioX + ux * trecho;
+      const fimY = inicioY + uy * trecho;
+
+      ctx.strokeStyle = `rgba(226, 205, 156, ${0.09 + 0.3 * recente})`;
+      ctx.lineWidth = (4 + 4 * recente) * dpr;
+      ctx.beginPath();
+      ctx.moveTo(inicioX, inicioY);
+      ctx.lineTo(fimX, fimY);
+      ctx.stroke();
+
+      ctx.strokeStyle = `rgba(242, 226, 190, ${0.6 + 0.4 * recente})`;
+      ctx.lineWidth = 1.15 * dpr;
+      ctx.beginPath();
+      ctx.moveTo(inicioX, inicioY);
+      ctx.lineTo(fimX, fimY);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  // escreve as letras gregas nas estrelas de cada grupo, da mais brilhante para a menos brilhante
+  function desenharLetras(grupos) {
+    ctx.save();
+    ctx.shadowColor = 'rgba(2, 3, 8, 0.95)';
+    ctx.shadowBlur = 5 * dpr;
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'alphabetic';
+    ctx.font = `italic ${11.5 * dpr}px Georgia, "Times New Roman", serif`;
+    ctx.fillStyle = 'rgba(214, 220, 240, 0.7)';
+    for (const grupo of grupos) {
+      if (grupo.membros.length < 2) continue;
+      const porBrilho = [...grupo.membros].sort((a, b) => a.magnitude - b.magnitude);
+      porBrilho.slice(0, ALFABETO_GREGO.length).forEach((estrela, i) => {
+        const p = paraTela(estrela);
+        const r = raioDe(estrela);
+        ctx.fillText(ALFABETO_GREGO[i], p.x + r + 4 * dpr, p.y - r - 3 * dpr);
+      });
+    }
+    ctx.restore();
+  }
+
   return {
     ctx,
     redimensionar,
@@ -378,6 +448,8 @@ function criarCeu(canvas) {
     raioDe,
     desenharFundo,
     desenharEstrelas,
+    desenharLinhas,
+    desenharLetras,
     get escala() {
       return escala;
     },
