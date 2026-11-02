@@ -21,6 +21,7 @@
 
       <div class="controles">
         <button type="button" id="botao-rodada" class="primario">Próxima rodada</button>
+        <button type="button" id="botao-auto" aria-pressed="false">Automático</button>
         <button type="button" id="botao-novo">Novo céu</button>
       </div>
     </main>
@@ -82,6 +83,10 @@
         <div class="ajuste">
           <label for="ajuste-estrelas"><span>Estrelas</span><output id="valor-estrelas">80</output></label>
           <input type="range" id="ajuste-estrelas" min="20" max="200" step="10" value="80">
+        </div>
+        <div class="opcoes">
+          <label class="opcao" for="opcao-centroides"><input type="checkbox" id="opcao-centroides">Mostrar centróides</label>
+          <label class="opcao" for="opcao-letras"><input type="checkbox" id="opcao-letras" checked>Letras gregas</label>
         </div>
       </section>
     </aside>

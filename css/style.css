@@ -362,10 +362,24 @@ button.primario:disabled {
   font-size: 15px;
 }
 
+#vista-diario {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  min-height: 12em;
+}
+
+#vista-diario[hidden] {
+  display: none;
+}
+
 .diario {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0 4px 0 0;
 }
 
 .diario li {
@@ -437,6 +451,28 @@ button.primario:disabled {
   font-variant-numeric: tabular-nums;
 }
 
+.opcoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 22px;
+}
+
+.opcao {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 14px;
+  color: var(--tinta);
+  cursor: pointer;
+}
+
+.opcao input {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  accent-color: var(--ouro);
+}
+
 input[type="range"] {
   width: 100%;
   margin: 0;
@@ -465,9 +501,17 @@ input[type="range"] {
     bottom: 16px;
   }
 
-  button {
-    font-size: 14px;
-    padding: 9px 15px;
+  .controles button {
+    font-size: 13.5px;
+    padding: 8px 13px;
+  }
+
+  .controles {
+    gap: 8px;
+  }
+
+  .diario {
+    max-height: 26em;
   }
 
   .painel {

@@ -5,6 +5,9 @@ const el = {
   ficha: document.getElementById('ficha'),
   botaoRodada: document.getElementById('botao-rodada'),
   botaoNovo: document.getElementById('botao-novo'),
+  botaoAuto: document.getElementById('botao-auto'),
+  opcaoCentroides: document.getElementById('opcao-centroides'),
+  opcaoLetras: document.getElementById('opcao-letras'),
   ajusteEstrelas: document.getElementById('ajuste-estrelas'),
   valorEstrelas: document.getElementById('valor-estrelas'),
   vistas: {
@@ -38,6 +41,9 @@ const explicador = criarExplicador(
 const estado = {
   semente: 0,
   quantidade: Number(el.ajusteEstrelas.value),
+  auto: null,
+  mostrarCentroides: el.opcaoCentroides.checked,
+  mostrarLetras: el.opcaoLetras.checked,
   campo: null,
   grupos: [],
   linhas: [],
@@ -63,6 +69,7 @@ function novaSemente() {
 
 // gera um céu a partir da semente e volta para a rodada zero
 function novoCeu(semente = novaSemente()) {
+  pararAuto();
   explicador.cancelar();
   estado.semente = semente;
   estado.campo = gerarCeu(semente, estado.quantidade, ceu.proporcaoUtil());
@@ -120,6 +127,25 @@ function aplicarRodada(par, comparacoes) {
   return true;
 }
 
+// liga ou desliga as rodadas automáticas
+function alternarAuto() {
+  if (estado.auto) {
+    pararAuto();
+    return;
+  }
+  estado.auto = setInterval(() => {
+    if (!proximaRodada()) pararAuto();
+  }, 700);
+  atualizarBotoes();
+}
+
+// interrompe as rodadas automáticas
+function pararAuto() {
+  clearInterval(estado.auto);
+  estado.auto = null;
+  atualizarBotoes();
+}
+
 // escreve o número do céu, a contagem de estrelas e o andamento no cabeçalho
 function atualizarFicha() {
   const pontos = estado.grupos.length;
@@ -130,7 +156,10 @@ function atualizarFicha() {
 function atualizarBotoes() {
   const explicando = explicador.ativo();
   el.botaoRodada.disabled = explicando || estado.grupos.length < 2;
-  el.botaoRodada.textContent = explicando ? 'Explicando a 1ª rodada' : 'Próxima rodada';
+  el.botaoRodada.textContent = explicando ? 'Explicando…' : 'Próxima rodada';
+  el.botaoAuto.disabled = explicando || estado.rodada === 0 || estado.grupos.length < 2;
+  el.botaoAuto.textContent = estado.auto ? 'Pausar' : 'Automático';
+  el.botaoAuto.setAttribute('aria-pressed', String(Boolean(estado.auto)));
 }
 
 // mostra apenas a vista escolhida do painel lateral
@@ -217,7 +246,8 @@ function quadro(agora) {
   ceu.desenharFundo();
   ceu.desenharLinhas(estado.linhas, agora);
   ceu.desenharEstrelas(agora);
-  ceu.desenharLetras(estado.grupos);
+  if (estado.mostrarLetras) ceu.desenharLetras(estado.grupos);
+  if (estado.mostrarCentroides) ceu.desenharCentroides(estado.grupos);
   desenharEfeitos(agora);
   explicador.desenhar(agora);
   requestAnimationFrame(quadro);
@@ -225,6 +255,15 @@ function quadro(agora) {
 
 el.botaoRodada.addEventListener('click', () => proximaRodada());
 el.botaoNovo.addEventListener('click', () => novoCeu());
+el.botaoAuto.addEventListener('click', alternarAuto);
+
+el.opcaoCentroides.addEventListener('change', () => {
+  estado.mostrarCentroides = el.opcaoCentroides.checked;
+});
+
+el.opcaoLetras.addEventListener('change', () => {
+  estado.mostrarLetras = el.opcaoLetras.checked;
+});
 
 el.ajusteEstrelas.addEventListener('input', () => {
   el.valorEstrelas.textContent = el.ajusteEstrelas.value;
@@ -237,6 +276,7 @@ el.ajusteEstrelas.addEventListener('change', () => {
 
 new ResizeObserver(() => ceu.redimensionar()).observe(tela);
 
+el.valorEstrelas.textContent = estado.quantidade;
 ceu.redimensionar();
 novoCeu();
 requestAnimationFrame(quadro);
