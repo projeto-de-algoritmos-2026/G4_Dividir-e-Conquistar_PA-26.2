@@ -4,6 +4,10 @@ Um céu de estrelas aleatórias vira constelações rodada após rodada. Em cada
 
 Projeto feito com HTML, CSS e JavaScript puro, sem dependências nem etapa de build.
 
+## Vídeo
+
+[Assista ao vídeo no YouTube](https://youtu.be/JkfApkVx8EM)
+
 ## Como rodar
 
 Abra o `index.html` no navegador. Também funciona publicado no GitHub Pages.
